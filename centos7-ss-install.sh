@@ -49,6 +49,8 @@ set_domain(){
 
 # Pre-installation
 pre_install(){
+    read -p "\033[1;34mPress any key to start the installation.\033[0m" a
+    echo -e "\033[1;34mStart installing. This may take a while.\033[0m"
     yum install -y epel-release
     yum install -y git wget gettext gcc autoconf libtool automake make asciidoc xmlto c-ares-devel libev-devel zlib-devel openssl-devel rng-tools
 }
@@ -69,7 +71,6 @@ install_libsodium(){
         popd
         ldconfig
         if [ ! -f /usr/lib/libsodium.a ];then
-            clear
             echo -e "\033[1;31mFailed to install libsodium.\033[0m"
             exit 1
         fi
@@ -92,7 +93,6 @@ install_mbedtls(){
         popd
         ldconfig
         if [ ! -f /usr/lib/libmbedtls.a ];then
-            clear
             echo -e "\033[1;31mFailed to install MbedTLS.\033[0m"
             exit 1
         fi
@@ -115,7 +115,6 @@ install_ss(){
         make install
         popd
         if [ ! -f /usr/local/bin/ss-server ];then
-            clear
             echo -e "\033[1;31mFailed to install shadowsocks-libev.\033[0m"
             exit 1
         fi
@@ -135,7 +134,6 @@ install_v2(){
         tar xf $v2_file
         mv v2ray-plugin_linux_amd64 /usr/local/bin/v2ray-plugin
         if [ ! -f /usr/local/bin/v2ray-plugin ];then
-            clear
             echo -e "\033[1;31mFailed to install v2ray-plugin.\033[0m"
             exit 1
         fi
@@ -162,6 +160,8 @@ Description=Shadowsocks
 [Service]
 TimeoutStartSec=0
 ExecStart=/usr/local/bin/ss-server -c /etc/shadowsocks-libev/config.json
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -171,13 +171,13 @@ get_cert(){
     if [ -f /etc/letsencrypt/live/$domain/fullchain.pem ];then
         echo -e "\033[1;32mcert already got, skip.\033[0m"
     else
-        yum install firewalld -y
-        systemctl start firewalld
-        systemctl enable firewalld
-        firewall-cmd --permanent --zone=public --add-service=http
-        firewall-cmd --permanent --zone=public --add-port=443/tcp
-        firewall-cmd --permanent --zone=public --add-port=443/udp
-        firewall-cmd --reload
+        systemctl status firewalld > /dev/null 2>&1
+        if [ $? -eq 0 ]; then
+            firewall-cmd --permanent --zone=public --add-service=http
+            firewall-cmd --permanent --zone=public --add-port=443/tcp
+            firewall-cmd --permanent --zone=public --add-port=443/udp
+            firewall-cmd --reload
+        fi
         if [ ! -f certbot-auto ];then
             wget https://dl.eff.org/certbot-auto
         fi
@@ -185,7 +185,6 @@ get_cert(){
         yum install -y augeas-libs libffi-devel mod_ssl python-devel python-tools python-virtualenv python2-pip redhat-rpm-config gcc openssl openssl-devel ca-certificates
         ./certbot-auto certonly --cert-name $domain -d $domain --standalone --agree-tos --register-unsafely-without-
         if [ ! -f /etc/letsencrypt/live/$domain/fullchain.pem ];then
-            clear
             echo -e "\033[1;31mFailed to get cert.\033[0m"
             exit 1
         fi
@@ -193,6 +192,10 @@ get_cert(){
 }
 
 start_ss(){
+    systemctl status shadowsocks > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        systemctl stop shadowsocks
+    fi
     systemctl enable shadowsocks
     systemctl start shadowsocks
 }
