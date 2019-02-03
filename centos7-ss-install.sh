@@ -154,13 +154,13 @@ ss_conf(){
     "plugin_opts":"server;tls;cert=/etc/letsencrypt/live/$domain/fullchain.pem;key=/etc/letsencrypt/live/$domain/privkey.pem;host=$domain;loglevel=none"
 }
 EOF
-    cat >/etc/systemd/system/shadowsocks.service << EOF
+    cat >/usr/lib/systemd/system/shadowsocks.service << EOF
 [Unit]
-Description=Shadowsocks
+Description=Shadowsocks-libev Server Service
+After=network.target
 [Service]
-TimeoutStartSec=0
 ExecStart=/usr/local/bin/ss-server -c /etc/shadowsocks-libev/config.json
-ExecReload=/bin/kill -HUP $MAINPID
+ExecReload=/bin/kill -HUP \$MAINPID
 Restart=on-failure
 [Install]
 WantedBy=multi-user.target
@@ -178,12 +178,10 @@ get_cert(){
             firewall-cmd --permanent --zone=public --add-port=443/udp
             firewall-cmd --reload
         fi
-        if [ ! -f certbot-auto ];then
-            wget https://dl.eff.org/certbot-auto
-        fi
-        chmod +x certbot-auto
-        yum install -y augeas-libs libffi-devel mod_ssl python-devel python-tools python-virtualenv python2-pip redhat-rpm-config gcc openssl openssl-devel ca-certificates
-        ./certbot-auto certonly --cert-name $domain -d $domain --standalone --agree-tos --register-unsafely-without-
+        yum install -y certbot
+        certbot certonly --cert-name $domain -d $domain --standalone --agree-tos --register-unsafely-without-email
+        systemctl enable certbot-renew.timer
+        systemctl start certbot-renew.timer
         if [ ! -f /etc/letsencrypt/live/$domain/fullchain.pem ];then
             echo -e "\033[1;31mFailed to get cert.\033[0m"
             exit 1
