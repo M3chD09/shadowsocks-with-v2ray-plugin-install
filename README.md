@@ -13,15 +13,21 @@ You can register one for free at [freenom](https://my.freenom.com/clientarea.php
 Point your domain to the IP address with A record.  
 ### Usage
 ```bash
-# CentOS 7
+# Installation
+## CentOS 7
 wget -O centos7-ss-install.sh https://github.com/M3chD09/shadowsocks-with-v2ray-plugin-install/raw/master/centos7-ss-install.sh
 chmod +x centos7-ss-install.sh
 ./centos7-ss-install.sh
 
-# Ubuntu 18.04/16.04 or Debian 9
+## Ubuntu 18.04/16.04 or Debian 9
 wget -O ubuntu-ss-install.sh https://github.com/M3chD09/shadowsocks-with-v2ray-plugin-install/raw/master/ubuntu-ss-install.sh
 chmod +x ubuntu-ss-install.sh
 ./ubuntu-ss-install.sh
+
+# Manage shadowsocks with systemctl
+systemctl status shadowsocks
+systemctl start shadowsocks
+systemctl stop shadowsocks
 ```
 ### Notice
 Tested on CentOS 7, Ubuntu 18.04/16.04 and Debian 9.  
