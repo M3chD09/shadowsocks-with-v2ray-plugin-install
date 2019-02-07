@@ -51,7 +51,7 @@ set_domain(){
 pre_install(){
     read -p "Press any key to start the installation." a
     echo "\033[1;34mStart installing. This may take a while.\033[0m"
-    apt update
+    apt-get update
     apt-get install -y --no-install-recommends gettext build-essential autoconf libtool libpcre3-dev asciidoc xmlto libev-dev libc-ares-dev automake
 }
 
@@ -171,7 +171,12 @@ get_cert(){
     if [ -f /etc/letsencrypt/live/$domain/fullchain.pem ];then
         echo "\033[1;32mcert already got, skip.\033[0m"
     else
-        apt install -y certbot
+        apt-get update
+        apt-get install -y software-properties-common
+        add-apt-repository -y universe
+        add-apt-repository -y ppa:certbot/certbot
+        apt-get update
+        apt-get install -y certbot 
         certbot certonly --cert-name $domain -d $domain --standalone --agree-tos --register-unsafely-without-email
         systemctl enable certbot.timer
         systemctl start certbot.timer
