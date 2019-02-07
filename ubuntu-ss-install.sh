@@ -2,8 +2,8 @@
 
 # Check system
 if [ ! -f /etc/lsb-release ];then
-    if ! grep -Eqi "ubuntu" /etc/issue;then
-        echo "\033[1;31mOnly Ubuntu can run this shell.\033[0m"
+    if ! grep -Eqi "ubuntu|debian" /etc/issue;then
+        echo "\033[1;31mOnly Ubuntu or Debian can run this shell.\033[0m"
         exit 1
     fi
 fi
@@ -36,13 +36,13 @@ set_domain(){
     echo "If you don't have one, you can register one for free at:"
     echo "https://my.freenom.com/clientarea.php"
     read domain
-    str=`echo $domain | gawk '/^([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/{print $0}'`
+    str=`echo $domain | grep '^\([a-zA-Z0-9_\-]\{1,\}\.\)\{1,\}[a-zA-Z]\{2,5\}'`
     while [ ! -n "${str}" ]
     do
         echo "\033[1;31mInvalid domain.\033[0m"
         echo "\033[1;31mPlease try again:\033[0m"
         read domain
-        str=`echo $domain | gawk '/^([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/{print $0}'`
+        str=`echo $domain | grep '^\([a-zA-Z0-9_\-]\{1,\}\.\)\{1,\}[a-zA-Z]\{2,5\}'`
     done
     echo "\033[1;35mdomain = ${domain}\033[0m"
 }
@@ -172,10 +172,12 @@ get_cert(){
         echo "\033[1;32mcert already got, skip.\033[0m"
     else
         apt-get update
-        apt-get install -y software-properties-common
-        add-apt-repository -y universe
-        add-apt-repository -y ppa:certbot/certbot
-        apt-get update
+        if grep -Eqi "ubuntu" /etc/issue;then
+            apt-get install -y software-properties-common
+            add-apt-repository -y universe
+            add-apt-repository -y ppa:certbot/certbot
+            apt-get update
+        fi
         apt-get install -y certbot 
         certbot certonly --cert-name $domain -d $domain --standalone --agree-tos --register-unsafely-without-email
         systemctl enable certbot.timer
