@@ -1,9 +1,30 @@
 ## Shadowsocks-libev with v2ray-plugin docker image
 ### Usage
-Edit configuration file `config_example.json` first. Then run:
 ```bash
 docker build -t m3chd09/shadowsocks-with-v2ray-plugin .
 docker run --name shadowsocks-with-v2ray-plugin -d -p 8008:8008 m3chd09/shadowsocks-with-v2ray-plugin
+```
+Supported arguments:
+```
+-s <shadowsocks_config>    Arguments string of shadowsocks-libev.
+                           Other arguments will be ignored if this is provided.
+
+-p <server_port>           Port number of your server.
+                           The default port is 8008.
+
+-k <password>              Password of your server.
+                           The default password is password.
+
+-m <encrypt_method>         Encrypt method: rc4-md5,
+                            aes-128-gcm, aes-192-gcm, aes-256-gcm,
+                            aes-128-cfb, aes-192-cfb, aes-256-cfb,
+                            aes-128-ctr, aes-192-ctr, aes-256-ctr,
+                            camellia-128-cfb, camellia-192-cfb,
+                            camellia-256-cfb, bf-cfb,
+                            chacha20-ietf-poly1305,
+                            xchacha20-ietf-poly1305,
+                            salsa20, chacha20 and chacha20-ietf.
+                            The default cipher is aes-256-gcm.
 ```
 ### Deploy it after nginx
 Let's assume that you are using *Shadowsocks over websocket(HTTPS)*.  

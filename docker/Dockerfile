@@ -1,5 +1,7 @@
 FROM alpine:latest
 
+LABEL maintainer="m3chd09 <m3chd09@protonmail.com>"
+
 RUN apk add --virtual .build-deps \
     tar \
     wget \
@@ -34,6 +36,7 @@ RUN apk add --virtual .build-deps \
     && rm -rf $ss_file $v2_file "$(echo ${ss_file} | cut -f1-3 -d\.)" \
     && mkdir /etc/shadowsocks-libev/
 
-COPY ./config_example.json /etc/shadowsocks-libev/config.json
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chmod a+x /entrypoint.sh
 
-CMD [ "ss-server", "-c", "/etc/shadowsocks-libev/config.json" ]
+ENTRYPOINT ["/entrypoint.sh"]
