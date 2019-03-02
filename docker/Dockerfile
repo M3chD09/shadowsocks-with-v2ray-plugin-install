@@ -33,8 +33,7 @@ RUN apk add --virtual .build-deps \
         | xargs -r apk info --installed \
         | sort -u) \
     && apk del .build-deps \
-    && rm -rf $ss_file $v2_file "$(echo ${ss_file} | cut -f1-3 -d\.)" \
-    && mkdir /etc/shadowsocks-libev/
+    && rm -rf $ss_file $v2_file "$(echo ${ss_file} | cut -f1-3 -d\.)"
 
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh

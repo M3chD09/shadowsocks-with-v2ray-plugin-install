@@ -18,8 +18,6 @@ while getopts "s:p:m:k:" OPT; do
     esac
 done
 
-echo -e "\033[1;32mStarting shadowsocks-libev server...\033[0m"
-
 if [ "${SS_CONFIG}" != "" ]; then
     ss-server ${SS_CONFIG}
 else
