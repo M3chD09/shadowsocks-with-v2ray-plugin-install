@@ -12,8 +12,8 @@ fi
 [ `whoami` != "root" ] && echo -e "\033[1;31mThis script must be run as root.\033[0m" && exit 1
 
 # Version
-LIBSODIUM_VER=1.0.17
-MBEDTLS_VER=2.16.0
+LIBSODIUM_VER=stable
+MBEDTLS_VER=2.16.4
 ss_file=0
 v2_file=0
 get_latest_ver(){
@@ -52,17 +52,17 @@ pre_install(){
     read -p "Press any key to start the installation." a
     echo -e "\033[1;34mStart installing. This may take a while.\033[0m"
     yum install -y epel-release
-    yum install -y git wget gettext gcc autoconf libtool automake make asciidoc xmlto c-ares-devel libev-devel zlib-devel openssl-devel rng-tools
+    yum install -y git wget gettext gcc autoconf libtool automake make asciidoc xmlto c-ares-devel libev-devel zlib-devel openssl-devel rng-tools python2 pcre-devel
 }
 
 
 # Installation of Libsodium
 install_libsodium(){
-    if [ -f /usr/lib/libsodium.a ];then
+    if [ -f /usr/lib/libsodium.a ] || [ -f /usr/lib64/libsodium.a ];then
         echo -e "\033[1;32mLibsodium already installed, skip.\033[0m"
     else
         if [ ! -f libsodium-$LIBSODIUM_VER.tar.gz ];then
-            wget https://download.libsodium.org/libsodium/releases/libsodium-$LIBSODIUM_VER.tar.gz
+            wget https://download.libsodium.org/libsodium/releases/LATEST.tar.gz -O libsodium-$LIBSODIUM_VER.tar.gz
         fi
         tar xf libsodium-$LIBSODIUM_VER.tar.gz
         pushd libsodium-$LIBSODIUM_VER
@@ -70,7 +70,7 @@ install_libsodium(){
         make install
         popd
         ldconfig
-        if [ ! -f /usr/lib/libsodium.a ];then
+        if [ ! -f /usr/lib/libsodium.a ] && [ ! -f /usr/lib64/libsodium.a ];then
             echo -e "\033[1;31mFailed to install libsodium.\033[0m"
             exit 1
         fi
