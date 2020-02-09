@@ -214,16 +214,56 @@ print_ss_info(){
     echo "Your Plugin options   :  tls;host=${domain}"
     echo "Enjoy it!"
 }
-set_password
-set_domain
-pre_install
-install_libsodium
-install_mbedtls
-get_latest_ver
-install_ss
-install_v2
-ss_conf
-get_cert
-start_ss
-remove_files
-print_ss_info
+
+install_all(){
+    set_password
+    set_domain
+    pre_install
+    install_libsodium
+    install_mbedtls
+    get_latest_ver
+    install_ss
+    install_v2
+    ss_conf
+    get_cert
+    start_ss
+    remove_files
+    print_ss_info
+}
+
+remove_all(){
+    systemctl disable shadowsocks
+    systemctl stop shadowsocks
+    rm -fr /etc/shadowsocks-libev
+    rm -f /usr/local/bin/ss-local
+    rm -f /usr/local/bin/ss-tunnel
+    rm -f /usr/local/bin/ss-server
+    rm -f /usr/local/bin/ss-manager
+    rm -f /usr/local/bin/ss-redir
+    rm -f /usr/local/bin/ss-nat
+    rm -f /usr/local/bin/v2ray-plugin
+    rm -f /usr/local/lib/libshadowsocks-libev.a
+    rm -f /usr/local/lib/libshadowsocks-libev.la
+    rm -f /usr/local/include/shadowsocks.h
+    rm -f /usr/local/lib/pkgconfig/shadowsocks-libev.pc
+    rm -f /usr/local/share/man/man1/ss-local.1
+    rm -f /usr/local/share/man/man1/ss-tunnel.1
+    rm -f /usr/local/share/man/man1/ss-server.1
+    rm -f /usr/local/share/man/man1/ss-manager.1
+    rm -f /usr/local/share/man/man1/ss-redir.1
+    rm -f /usr/local/share/man/man1/ss-nat.1
+    rm -f /usr/local/share/man/man8/shadowsocks-libev.8
+    rm -fr /usr/local/share/doc/shadowsocks-libev
+    rm -f /usr/lib/systemd/system/shadowsocks.service
+    echo "Remove success!"
+}
+
+echo "What do you want to do?"
+echo "[1] Install"
+echo "[2] Remove"
+read -p "(Default option: Install):" option
+if [ $option -eq 2 ];then
+    remove_all
+else
+    install_all
+fi
