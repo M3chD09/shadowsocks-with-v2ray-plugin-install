@@ -7,17 +7,17 @@ You must use shadowsocks via port 443 with v2ray-plugin and can even run your sh
 ### Requirement
 VPS  
 You can sign up through my referral link:  
-[Vultr](https://www.vultr.com/?ref=6997378), [DigitalOcean](https://m.do.co/c/7ea2fecf9223), [Linode](https://www.linode.com/?r=69960c4818028406de98ad12d7a19913869992e1), [CloudCone](https://app.cloudcone.com/?ref=1365)  
+[Vultr](https://www.vultr.com/?ref=8382242-6G), [DigitalOcean](https://m.do.co/c/7ea2fecf9223), [Linode](https://www.linode.com/?r=69960c4818028406de98ad12d7a19913869992e1), [CloudCone](https://app.cloudcone.com/?ref=1365)  
 Domain  
 You can register one for free at [freenom](https://my.freenom.com/clientarea.php).  
 Point your domain to the IP address with A record.  
 ### Usage
 ```bash
 # Installation
-## CentOS 7
-wget -O centos7-ss-install.sh https://github.com/M3chD09/shadowsocks-with-v2ray-plugin-install/raw/master/centos7-ss-install.sh
-chmod +x centos7-ss-install.sh
-./centos7-ss-install.sh
+## CentOS 7/8
+wget -O centos-ss-install.sh https://github.com/M3chD09/shadowsocks-with-v2ray-plugin-install/raw/master/centos-ss-install.sh
+chmod +x centos-ss-install.sh
+./centos-ss-install.sh
 
 ## Ubuntu 18.04/16.04 or Debian 9
 wget -O ubuntu-ss-install.sh https://github.com/M3chD09/shadowsocks-with-v2ray-plugin-install/raw/master/ubuntu-ss-install.sh
@@ -30,6 +30,6 @@ systemctl start shadowsocks
 systemctl stop shadowsocks
 ```
 ### Notice
-Tested on CentOS 7, Ubuntu 18.04/16.04 and Debian 9.  
+Tested on CentOS 7/8, Ubuntu 18.04/16.04 and Debian 9.  
 ***Full of bugs.***  
 ***Under construction.***
