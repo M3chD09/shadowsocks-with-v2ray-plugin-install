@@ -23,7 +23,6 @@ get_latest_ver(){
 
 # Set shadowsocks-libev config password
 set_password(){
-    clear
     echo "\033[1;34mPlease enter password for shadowsocks-libev:\033[0m"
     read -p "(Default password: M3chD09):" shadowsockspwd
     [ -z "${shadowsockspwd}" ] && shadowsockspwd="M3chD09"
@@ -255,9 +254,10 @@ remove_all(){
     rm -f /usr/local/share/man/man8/shadowsocks-libev.8
     rm -fr /usr/local/share/doc/shadowsocks-libev
     rm -f /usr/lib/systemd/system/shadowsocks.service
-    echo "Remove success!"
+    echo "\033[1;32mRemove success!\033[0m"
 }
 
+clear
 echo "What do you want to do?"
 echo "[1] Install"
 echo "[2] Remove"
