@@ -19,7 +19,7 @@ wget -O centos-ss-install.sh https://github.com/M3chD09/shadowsocks-with-v2ray-p
 chmod +x centos-ss-install.sh
 ./centos-ss-install.sh
 
-## Ubuntu 18.04/16.04 or Debian 9
+## Ubuntu 18.04/16.04 or Debian 9/10
 wget -O ubuntu-ss-install.sh https://github.com/M3chD09/shadowsocks-with-v2ray-plugin-install/raw/master/ubuntu-ss-install.sh
 chmod +x ubuntu-ss-install.sh
 ./ubuntu-ss-install.sh
@@ -30,6 +30,6 @@ systemctl start shadowsocks
 systemctl stop shadowsocks
 ```
 ### Notice
-Tested on CentOS 7/8, Ubuntu 18.04/16.04 and Debian 9.  
+Tested on CentOS 7/8, Ubuntu 18.04/16.04 and Debian 9/10.  
 ***Full of bugs.***  
 ***Under construction.***
