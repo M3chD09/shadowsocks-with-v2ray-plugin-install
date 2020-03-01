@@ -262,6 +262,7 @@ echo "What do you want to do?"
 echo "[1] Install"
 echo "[2] Remove"
 read -p "(Default option: Install):" option
+option=${option:-1}
 if [ $option -eq 2 ];then
     remove_all
 else

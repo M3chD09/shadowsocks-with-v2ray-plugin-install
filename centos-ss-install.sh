@@ -166,17 +166,19 @@ WantedBy=multi-user.target
 EOF
 }
 
+firewall_conf(){
+    systemctl status firewalld > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        firewall-cmd --permanent --zone=public --add-service=http
+        firewall-cmd --permanent --zone=public --add-service=https
+        firewall-cmd --reload
+    fi
+}
+
 get_cert(){
     if [ -f /etc/letsencrypt/live/$domain/fullchain.pem ];then
         echo -e "\033[1;32mcert already got, skip.\033[0m"
     else
-        systemctl status firewalld > /dev/null 2>&1
-        if [ $? -eq 0 ]; then
-            firewall-cmd --permanent --zone=public --add-service=http
-            firewall-cmd --permanent --zone=public --add-port=443/tcp
-            firewall-cmd --permanent --zone=public --add-port=443/udp
-            firewall-cmd --reload
-        fi
         yum install -y certbot
         certbot certonly --cert-name $domain -d $domain --standalone --agree-tos --register-unsafely-without-email
         systemctl enable certbot-renew.timer
@@ -224,6 +226,7 @@ install_all(){
     install_ss
     install_v2
     ss_conf
+    firewall_conf
     get_cert
     start_ss
     remove_files
@@ -262,6 +265,7 @@ echo "What do you want to do?"
 echo "[1] Install"
 echo "[2] Remove"
 read -p "(Default option: Install):" option
+option=${option:-1}
 if [ $option -eq 2 ];then
     remove_all
 else
