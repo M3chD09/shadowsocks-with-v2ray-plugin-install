@@ -13,7 +13,7 @@ fi
 
 # Version
 LIBSODIUM_VER=stable
-MBEDTLS_VER=2.16.5
+MBEDTLS_VER=2.16
 ss_file=0
 v2_file=0
 get_latest_ver(){
@@ -51,7 +51,7 @@ pre_install(){
     read -p "Press any key to start the installation." a
     echo "\033[1;34mStart installing. This may take a while.\033[0m"
     apt-get update
-    apt-get install -y --no-install-recommends gettext build-essential autoconf libtool libpcre3-dev asciidoc xmlto libev-dev libc-ares-dev automake
+    apt-get install -y --no-install-recommends gettext build-essential autoconf libtool libpcre3-dev asciidoc xmlto libev-dev libc-ares-dev automake git
 }
 
 
@@ -82,11 +82,9 @@ install_mbedtls(){
     if [ -f /usr/lib/libmbedtls.a ];then
         echo "\033[1;32mMbedTLS already installed, skip.\033[0m"
     else
-        if [ ! -f mbedtls-$MBEDTLS_VER-gpl.tgz ];then
-            wget https://tls.mbed.org/download/mbedtls-$MBEDTLS_VER-gpl.tgz
-        fi
-        tar xf mbedtls-$MBEDTLS_VER-gpl.tgz
-        cd mbedtls-$MBEDTLS_VER
+        git clone https://github.com/Mbed-TLS/mbedtls.git
+        cd mbedtls
+        git checkout archive/mbedtls-$MBEDTLS_VER
         make SHARED=1 CFLAGS=-fPIC
         make DESTDIR=/usr install
         cd ..
